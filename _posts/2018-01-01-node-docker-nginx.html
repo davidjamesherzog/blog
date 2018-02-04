@@ -1,0 +1,93 @@
+---
+layout: post
+current: post
+cover: false
+navigation: True
+title: Node, Docker and nginx
+date: 2018-01-01 10:18:00
+tags: node docker nginx
+class: post-template
+subclass: 'post'
+author: dave
+---
+
+<p></p>
+<p>There may be times in your development process where you might want to run your code locally just like you would run it in production.  Most of us run different operating systems for development than where we run our production code.  Docker makes it easy for you to spin up an enviroment that mimics your production enviroment locally.</p>
+
+
+<h3 id="basictagging">Getting Started</h3>
+<p>We'll start off by creating a new project.  This is easy to do by using the <code>npm init</code> command.</p>
+
+<pre><code class="nohighlight">$ npm init -f
+</code></pre>
+
+<p>Lets go ahead and create a source directory and create a simple index.html file.</p>
+
+<pre><code class="nohighlight">$ mkdir src
+$ cd src
+$ touch index.html
+</code></pre>
+
+<p>Once you have created the index.html file, add the following html code for a very simple example.</p>
+
+<pre><code class="nohighlight">&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Node-Docker-nginx&lt;/title&gt;
+  &lt;/head&gt;
+  
+  &lt;body&gt;
+    &lt;p&gt;Hello Node Docker nginx example&lt;/p&gt;
+  &lt;body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>Now you will create your Dockerfile.</p>
+
+<pre><code class="nohighlight">$ touch Dockerfile
+</code></pre>
+
+<p>We'll leverage the existing nginx docker container from <a href="https://hub.docker.com/_/nginx/">here</a>.</p>
+
+<pre><code class="nohighlight"># Builds a Docker to deliver src/
+FROM nginx:latest
+COPY src/ /usr/share/nginx/html
+</code></pre>
+
+<p>We'll use your Dockerfile to create the nginx docker image.</p>
+
+<pre><code class="nohighlight">docker build -t node-docker-nginx:latest .
+</code></pre>
+
+<p>Now the docker image should be created.  To verify, run the following docker command:</p>
+
+<pre><code class="nohighlight">docker images 
+</code></pre>
+
+<p>You should see your newly created docker image like this.</p>
+
+<pre><code class="nohighlight">REPOSITORY               TAG                 IMAGE ID            CREATED             SIZE
+node-docker-nginx        latest              4a3eea93df52        5 seconds ago       181.5 MB
+</code></pre>
+
+<p>Next, you'll create the docker container by running the following docker command.  This will run nginx on port <code>8080</code> instead of the default port of <code>80</code>.</p>
+
+<pre><code class="nohighlight">docker run --name node-docker-nginx -d -p 8080:80 node-docker-nginx
+</code></pre>
+
+<p>List the containers that you have created.</p>
+
+<pre><code class="nohighlight">docker ps -a
+</code></pre>
+
+<p>You should see your new docker container like this.</p>
+
+<pre><code class="nohighlight">CONTAINER ID    IMAGE                COMMAND                  ...   PORTS                           NAMES
+38be8f13dcd9    node-docker-nginx    "nginx -g 'daemon off"   ...   443/tcp, 0.0.0.0:8080->80/tcp   node-docker-nginx
+</code></pre>
+
+<p>Now all you have to do is start your container.</p>
+
+<pre><code class="nohighlight">docker start node-docker-nginx
+</code></pre>
+
+<p>Go to your <code>index.html</code> page by going <a href="http://localhost:8080/">here</a>.</p>

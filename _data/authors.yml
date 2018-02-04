@@ -1,0 +1,12 @@
+dave:
+  username: dave
+  name: David Herzog
+  location: Southeastern, PA
+  url_full: False
+  url: False
+  bio: A front-end developer who loves to learn and tinker with new technologies.
+  picture: assets/images/dave.jpg
+  facebook: False
+  twitter: evadgozreh
+  cover: false
+
